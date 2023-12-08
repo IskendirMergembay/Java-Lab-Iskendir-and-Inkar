@@ -1,0 +1,178 @@
+import java.sql.*;
+import java.util.Scanner;
+
+class Train {
+    private final Van[] wagons;
+
+    public Train(int numberOfWagons, int seatsPerWagon) {
+        this.wagons = new Van[numberOfWagons];
+        for (int i = 0; i < numberOfWagons; i++) {
+            wagons[i] = new Van(i + 1, seatsPerWagon);
+        }
+    }
+
+    public void addPassenger(String passengerName, int wagonNumber, int seatNumber) {
+        if (wagonNumber >= 1 && wagonNumber <= wagons.length) {
+            wagons[wagonNumber - 1].addPassenger(passengerName, seatNumber);
+        } else {
+            System.out.println("Invalid wagon number.");
+        }
+    }
+
+    public void checkPassenger(int wagonNumber, int seatNumber) {
+        if (wagonNumber >= 1 && wagonNumber <= wagons.length) {
+            wagons[wagonNumber - 1].checkPassenger(seatNumber);
+        } else {
+            System.out.println("Invalid wagon number.");
+        }
+    }
+
+    public void removePassenger(int wagonNumber, int seatNumber) {
+        if (wagonNumber >= 1 && wagonNumber <= wagons.length) {
+            wagons[wagonNumber - 1].removePassenger(seatNumber);
+        } else {
+            System.out.println("Invalid wagon number.");
+        }
+    }
+
+    public void displayTrainInfo() {
+        System.out.println("Train Information:");
+        System.out.printf("%-5s %-15s %-10s\n", "Wagon", "Passengers", "Seats");
+
+        for (Van wagon : wagons) {
+            System.out.printf("%-5d %-15d %-10d\n",
+                    wagon.getNumber(),
+                    wagon.getPassengerCount(),
+                    wagon.getSeats());
+        }
+    }
+}
+
+class Van {
+    private final int number;
+    private final int seats;
+    private final String[] passengers;
+
+    public Van(int number, int seats) {
+        this.number = number;
+        this.seats = seats;
+        this.passengers = new String[seats];
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public int getSeats() {
+        return seats;
+    }
+
+    public int getPassengerCount() {
+        int count = 0;
+        for (String passenger : passengers) {
+            if (passenger != null) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public void addPassenger(String passengerName, int seatNumber) {
+        if (seatNumber >= 1 && seatNumber <= seats) {
+            if (passengers[seatNumber - 1] == null) {
+                passengers[seatNumber - 1] = passengerName;
+                System.out.println("Passenger added.");
+            } else {
+                System.out.println("Someone is already sitting here.");
+            }
+        } else {
+            System.out.println("Invalid seat number.");
+        }
+    }
+
+    public void checkPassenger(int seatNumber) {
+        if (seatNumber >= 1 && seatNumber <= seats) {
+            String passenger = passengers[seatNumber - 1];
+            if (passenger != null) {
+                System.out.println("Passenger: " + passenger);
+            } else {
+                System.out.println("Seat is empty.");
+            }
+        } else {
+            System.out.println("Invalid seat number.");
+        }
+    }
+
+    public void removePassenger(int seatNumber) {
+        if (seatNumber >= 1 && seatNumber <= seats) {
+            if (passengers[seatNumber - 1] != null) {
+                passengers[seatNumber - 1] = null;
+                System.out.println("Passenger removed successfully.");
+            } else {
+                System.out.println("Seat is already empty.");
+            }
+        } else {
+            System.out.println("Invalid seat number.");
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Input the number of wagons:");
+        int numberOfWagons = scanner.nextInt();
+
+        System.out.println("Input the number of seats per wagon:");
+        int seatsPerWagon = scanner.nextInt();
+
+        Train train = new Train(numberOfWagons, seatsPerWagon);
+while (true) {
+            System.out.println("Choose an action:");
+            System.out.println("1. Add passenger");
+            System.out.println("2. Check passenger");
+            System.out.println("3. Remove passenger");
+            System.out.println("4. Display full information train");
+            System.out.println("5. Exit");
+
+            int choice = scanner.nextInt();
+
+            if (choice == 1) {
+                System.out.println("Input passenger name:");
+                String passengerName = scanner.next();
+
+                System.out.println("Input wagon number:");
+                int wagonNumber = scanner.nextInt();
+
+                System.out.println("Input seat number:");
+                int seatNumber = scanner.nextInt();
+
+                train.addPassenger(passengerName, wagonNumber, seatNumber);
+            } else if (choice == 2) {
+                System.out.println("Input wagon number:");
+                int wagonNumber = scanner.nextInt();
+
+                System.out.println("Input seat number:");
+                int seatNumber = scanner.nextInt();
+
+                train.checkPassenger(wagonNumber, seatNumber);
+            } else if (choice == 3) {
+                System.out.println("Input wagon number:");
+                int wagonNumber = scanner.nextInt();
+
+                System.out.println("Input seat number:");
+                int seatNumber = scanner.nextInt();
+
+                train.removePassenger(wagonNumber, seatNumber);
+            } else if (choice == 4) {
+                train.displayTrainInfo();
+            } else if (choice == 5) {
+                System.out.println("Exit the program.");
+                System.exit(0);
+            } else {
+                System.out.println("Invalid choice. Please enter a valid option.");
+            }
+        }
+    }
+}
