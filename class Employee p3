@@ -1,0 +1,97 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class Employee {
+    private final String name;
+    private final String position;
+    private final double salary;
+
+    public Employee(String name, String position, double salary) {
+        this.name = name;
+        this.position = position;
+        this.salary = salary;
+    }
+
+    public double getSalary() {
+        return salary;
+    }
+
+    public String toString() {
+        return "Employee " +
+                "Name: " + name + '\'' +
+                ", Position: " + position + '\'' +
+                ", Salary: " + salary;
+    }
+}
+
+class Project {
+    private final String name;
+    private final List<Employee> team = new ArrayList<>();
+
+    public Project(String name) {
+        this.name = name;
+    }
+
+    public void addEmployee(Employee employee) {
+        team.add(employee);
+    }
+
+    public double calculateTotalCost() {
+        double totalCost = 0;
+        for (Employee employee : team) {
+            totalCost += employee.getSalary();
+        }
+        return totalCost;
+    }
+
+    public String toString() {
+        StringBuilder result = new StringBuilder("Name of Project " + name + '\'' +
+                ", Our Team \n");
+
+        for (Employee employee : team) {
+            result.append("\t").append(employee).append("\n");
+        }
+
+        return result.toString();
+    }
+}
+
+public class Main {
+    private static Employee takeEmployeeDetails(Scanner scanner, String position) {
+        System.out.println("\nEnter " + position + " details:");
+        System.out.print("Name: ");
+        String name = scanner.nextLine();
+        System.out.print("Position: " + position + "\nSalary: ");
+        double salary = scanner.nextDouble();
+        scanner.nextLine(); // Consume the newline character
+        return new Employee(name, position, salary);
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter the number of employees: ");
+        int numberOfEmployees = scanner.nextInt();
+        scanner.nextLine(); // Consume the newline character
+
+        Project softwareProject = new Project("Software Project");
+
+        for (int i = 0; i < numberOfEmployees; i++) {
+            System.out.println("\nEnter details for Employee " + (i + 1));
+            System.out.print("Choose position: ");
+            String position = scanner.nextLine();
+
+            Employee employee = takeEmployeeDetails(scanner, position);
+            softwareProject.addEmployee(employee);
+        }
+
+        System.out.println("\nProject Details:");
+        System.out.println(softwareProject);
+
+        double totalCost = softwareProject.calculateTotalCost();
+        System.out.printf("Total Project Cost: %.2fтг%n", totalCost);
+
+        scanner.close();
+    }
+}
