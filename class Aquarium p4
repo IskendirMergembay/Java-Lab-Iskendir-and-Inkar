@@ -1,0 +1,111 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+abstract class WaterAnimal {
+    String name;
+    double basePrice;
+
+    WaterAnimal(String name, double basePrice) {
+        this.name = name;
+        this.basePrice = basePrice;
+    }
+
+    abstract double calculatePrice();
+}
+
+class Fish extends WaterAnimal {
+    Fish(String name, double basePrice) {
+        super(name, basePrice);
+    }
+
+    double calculatePrice() {
+        return basePrice;
+    }
+}
+
+class Reptile extends WaterAnimal {
+    Reptile(String name, double basePrice) {
+        super(name, basePrice);
+    }
+
+    double calculatePrice() {
+        return basePrice;
+    }
+}
+
+class WaterPark {
+    List<WaterAnimal> animals;
+    double accessoriesCost;
+    int aquariumCapacity;
+
+    WaterPark() {
+        this.animals = new ArrayList<>();
+        this.accessoriesCost = 0.0;
+        this.aquariumCapacity = 0;
+    }
+
+    void addAnimal(WaterAnimal animal) {
+        animals.add(animal);
+    }
+
+    void addAccessories(double cost) {
+        accessoriesCost += cost;
+    }
+
+    void setAquariumCapacity(int capacity) {
+        aquariumCapacity = capacity;
+    }
+
+    double calculateTotalPrice() {
+        double total = accessoriesCost;
+
+        for (WaterAnimal animal : animals) {
+            total += animal.calculatePrice();
+        }
+
+        return total;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        WaterPark myWaterPark = new WaterPark();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Input the aquarium capacity: ");
+        int capacity = scanner.nextInt();
+        myWaterPark.setAquariumCapacity(capacity);
+
+        while (true) {
+            System.out.print("Input the number of fish: ");
+            int numberOfFish = scanner.nextInt();
+
+            if (numberOfFish <= capacity) {
+                for (int i = 0; i < numberOfFish; i++) {
+                    System.out.print("Input fish name: ");
+                    String name = scanner.next();
+                    System.out.print("Input price for " + name + ": ");
+                    double price = scanner.nextDouble();
+                    myWaterPark.addAnimal(new Fish(name, price));
+                }
+                break; // Break out of the loop if the input is valid
+            } else {
+                System.out.println("Number of fish exceeds the aquarium capacity. Try again.");
+            }
+        }
+
+        System.out.print("Input the name of the reptile: ");
+        String reptileName = scanner.next();
+        System.out.print("Input price for " + reptileName + ": ");
+        double reptilePrice = scanner.nextDouble();
+        myWaterPark.addAnimal(new Reptile(reptileName, reptilePrice));
+
+        System.out.print("Input cost of accessories: ");
+        double accessoriesCost = scanner.nextDouble();
+        myWaterPark.addAccessories(accessoriesCost);
+
+        double totalPrice = myWaterPark.calculateTotalPrice();
+        System.out.println("Total Price of the Aquarium: " + totalPrice);
+    }
+}
