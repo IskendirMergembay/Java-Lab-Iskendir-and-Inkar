@@ -1,0 +1,130 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+abstract class Stone {
+    String stoneName;
+    double caratWeight;
+    double pricePerCarat;
+
+    Stone(String stoneName, double caratWeight, double pricePerCarat) {
+        this.stoneName = stoneName;
+        this.caratWeight = caratWeight;
+        this.pricePerCarat = pricePerCarat;
+    }
+
+    double calculateCost() {
+        return caratWeight * pricePerCarat;
+    }
+}
+
+class PreciousStone extends Stone {
+    PreciousStone(String stoneName, double caratWeight, double pricePerCarat) {
+        super(stoneName, caratWeight, pricePerCarat);
+    }
+}
+
+class SemiPreciousStone extends Stone {
+    SemiPreciousStone(String stoneName, double caratWeight, double pricePerCarat) {
+        super(stoneName, caratWeight, pricePerCarat);
+    }
+}
+
+class Necklace {
+    List<Stone> stones;
+
+    Necklace() {
+        this.stones = new ArrayList<>();
+    }
+
+    void addStone(Stone stone) {
+        stones.add(stone);
+    }
+
+    double calculateTotalWeight() {
+        double totalWeight = 0.0;
+
+        for (Stone stone : stones) {
+            totalWeight += stone.caratWeight;
+        }
+
+        return totalWeight;
+    }
+
+    double calculateTotalCost() {
+        double totalCost = 0.0;
+
+        for (Stone stone : stones) {
+            totalCost += stone.calculateCost();
+        }
+
+        return totalCost;
+    }
+
+    Stone findMostExpensiveStone() {
+        if (stones.isEmpty()) {
+            return null;
+        }
+
+        Stone mostExpensiveStone = stones.get(0);
+        for (Stone stone : stones) {
+            if (stone.calculateCost() > mostExpensiveStone.calculateCost()) {
+                mostExpensiveStone = stone;
+            }
+        }
+
+        return mostExpensiveStone;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        Necklace myNecklace = new Necklace();
+
+        System.out.println("Enter 'done' if you want to finish choice");
+        while (true) {
+            System.out.print("Stone name: ");
+            String stoneName = scanner.next();
+            if (stoneName.equalsIgnoreCase("done")) {
+                break;
+            }
+
+            System.out.print("Carat weight (in grams): ");
+            double caratWeight = scanner.nextDouble();
+
+            System.out.print("Price per carat: ");
+            double pricePerCarat = scanner.nextDouble();
+
+            System.out.print("Precious? (true/false): ");
+            boolean isPrecious = scanner.nextBoolean();
+
+            Stone stone;
+            if (isPrecious) {
+                stone = new PreciousStone(stoneName, caratWeight, pricePerCarat);
+            } else {
+                stone = new SemiPreciousStone(stoneName, caratWeight, pricePerCarat);
+            }
+
+            myNecklace.addStone(stone);
+        }
+
+        double totalWeight = myNecklace.calculateTotalWeight();
+        double totalCost = myNecklace.calculateTotalCost();
+        Stone mostExpensiveStone = myNecklace.findMostExpensiveStone();
+
+        System.out.println("Total Weight of the Necklace: " + totalWeight + " grams");
+        System.out.println("Total Cost of the Necklace: " + totalCost + " KZT");
+
+        if (mostExpensiveStone != null) {
+            System.out.println("Most Expensive Stone: " + mostExpensiveStone.stoneName +
+                    " (Cost per Carat: " + mostExpensiveStone.pricePerCarat +
+                    ", Total Cost: " + mostExpensiveStone.calculateCost() + ")");
+        } else {
+            System.out.println("No stones in the necklace.");
+        }
+
+        scanner.close();
+    }
+}
